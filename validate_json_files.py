@@ -55,7 +55,7 @@ class JsonValidator:
 
         old_column_names = {}
         for i, column in enumerate(old_columns):
-            assert column["name"] == new_columns[i]["name"], f"Operation Not Supported : Either column name or order of columns has been modified Inequality found at {column["name"]} != {new_columns[i]["name"]}"
+            assert column["name"] == new_columns[i]["name"], f"Operation Not Supported : Either column name or order of columns has been modified Inequality found : {column["name"]} is not equal to {new_columns[i]["name"]}"
             
             if(column["type"] != new_columns[i]["type"]):
                 assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]], f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column. Incompatible types found on column {column["name"]}"
