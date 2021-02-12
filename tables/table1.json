@@ -5,7 +5,7 @@
     "columns": [
       {
         "name" : "column1", 
-        "type" : "string"
+        "type" : "int"
       },
       {
         "name" : "column2",
