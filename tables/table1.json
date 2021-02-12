@@ -13,7 +13,7 @@
       },
       {
         "name" : "column4",
-        "type" : "bigint"
+        "type" : "int"
       },
       {
         "name" : "column5",
