@@ -33,12 +33,12 @@ class JsonValidator:
     def _check_if_required_keys_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         print("Checking if required keys are present")
         for key in REQUIRED_KEYS:
-            assert key in json_data, f'Key {key} not found. Please provide key {key} in {filename}'
+            assert key in json_data
 
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         for column_name, data_type in json_data["columns"].items():
-            assert data_type in HIVE_SUPPORTED_DATA_TYPES, f'Datatype {data_type} is not supported by Hive, supported data types are {HIVE_SUPPORTED_DATA_TYPES}. Please provide valid datatype for column {column_name} in file {filename}'
+            assert data_type in HIVE_SUPPORTED_DATA_TYPES
 
 
     @staticmethod
@@ -51,27 +51,27 @@ class JsonValidator:
         len_old = len(old_columns)
         len_new = len(new_columns)
 
-        assert len_old <= len_new, "Column deletion not supported for now"
+        assert len_old <= len_new
 
         old_column_names = {}
         for i, column in enumerate(old_columns):
-            assert column["name"] == new_columns[i]["name"], f"Operation Not Supported : Either column name or order of columns has been modified Inequality found : {column["name"]} is not equal to {new_columns[i]["name"]}"
+            assert column["name"] == new_columns[i]["name"]
             
             if(column["type"] != new_columns[i]["type"]):
-                assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]], f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column. Incompatible types found on column {column["name"]}"
+                assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]]
 
             old_column_names.add(column["name"])
             
         
         for i in range(len_old, len_new):
-            assert "name" in new_columns[i], f"Required key name not found in newly added column {new_columns[i]}"
-            assert "type" in new_columns[i], f"Required key type not found in newly added column {new_columns[i]}"
+            assert "name" in new_columns[i]
+            assert "type" in new_columns[i]
 
             _name, _type = new_columns[i]["name"], new_columns[i]["type"]
 
-            assert _type in HIVE_SUPPORTED_DATA_TYPES, f"Datatype {_type} not supported by Hive for column {_name}, supported datatypes are {HIVE_SUPPORTED_DATA_TYPES}."
+            assert _type in HIVE_SUPPORTED_DATA_TYPES
 
-            assert new_columns[i]["name"] not in old_column_names, f"Duplicate column name found for column {new_columns[i]["name"]}"
+            assert new_columns[i]["name"] not in old_column_names
 
             old_column_names.add(_name)
 
@@ -79,7 +79,7 @@ class JsonValidator:
         _validate_columns(old_content["columns"], new_content["columns"])
 
         if "partitioned" in old_content:
-            assert "partitioned" in new_content, "Can not drop partitioning columns"
+            assert "partitioned" in new_content
 
             _validate_columns(old_content["partitioned"], new_content["partitioned"])
 
