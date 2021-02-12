@@ -77,12 +77,12 @@ class JsonValidator:
 
     @staticmethod
     def validate_file_modification(old_content: Dict[str, Dict[str, Any]], new_content: Dict[str, Dict[str, Any]]):
-        _validate_columns(old_content["columns"], new_content["columns"])
+        self._validate_columns(old_content["columns"], new_content["columns"])
 
         if "partitioned" in old_content:
             assert "partitioned" in new_content
 
-            _validate_columns(old_content["partitioned"], new_content["partitioned"])
+            self._validate_columns(old_content["partitioned"], new_content["partitioned"])
 
     @staticmethod
     def _get_json_from_file_path(file_path: str) -> Optional[Dict[str, Dict[str, Any]]]:
