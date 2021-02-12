@@ -53,7 +53,7 @@ class JsonValidator:
 
         assert len_old <= len_new
 
-        old_column_names = {}
+        old_column_names = Set()
         for i, column in enumerate(old_columns):
             assert column["name"] == new_columns[i]["name"]
             
@@ -108,9 +108,6 @@ class JsonValidator:
 
                     new_content : Dict[str, Dict[str, Any]] = self._get_json_from_file_path(file.filename)
                     old_content : Dict[str, Dict[str, Any]] = json.loads(self.repo.get_contents(file.filename).decoded_content.decode())
-
-                    print(type(old_content))
-                    print(type(new_content))
 
                     # self._validate_json_data(new_content)
                     self.validate_file_modification(old_content, new_content)
