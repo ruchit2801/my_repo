@@ -53,7 +53,7 @@ class JsonValidator:
 
         assert len_old <= len_new
 
-        old_column_names = Set()
+        old_column_names = set()
         for i, column in enumerate(old_columns):
             assert column["name"] == new_columns[i]["name"]
             
