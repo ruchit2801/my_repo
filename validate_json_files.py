@@ -110,6 +110,7 @@ class JsonValidator:
                     old_content : Dict[str, Dict[str, Any]] = self.repo.get_contents(file.filename).decoded_content.decode()
 
                     # self._validate_json_data(new_content)
+                    print(old_content, new_content)
                     self.validate_file_modification(old_content, new_content)
 
                     
