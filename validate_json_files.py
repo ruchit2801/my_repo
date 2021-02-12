@@ -107,7 +107,7 @@ class JsonValidator:
                 if file_status == "modified":
 
                     new_content : Dict[str, Dict[str, Any]] = self._get_json_from_file_path(file.filename)
-                    old_content : Dict[str, Dict[str, Any]] = self.repo.get_contents(file.filename).decoded_content.decode()
+                    old_content : Dict[str, Dict[str, Any]] = json.loads(self.repo.get_contents(file.filename).decoded_content.decode())
 
                     print(type(old_content))
                     print(type(new_content))
