@@ -38,7 +38,7 @@ class JsonValidator:
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         for column_name, data_type in json_data["columns"].items():
-            assert data_type in HIVE_SUPPORTED_DATA_TYPES
+            assert data_type.lower() in HIVE_SUPPORTED_DATA_TYPES
 
 
     @staticmethod
@@ -69,7 +69,7 @@ class JsonValidator:
 
             _name, _type = new_columns[i]["name"], new_columns[i]["type"]
 
-            assert _type in HIVE_SUPPORTED_DATA_TYPES
+            assert _type.lower() in HIVE_SUPPORTED_DATA_TYPES
 
             assert new_columns[i]["name"] not in old_column_names
 
