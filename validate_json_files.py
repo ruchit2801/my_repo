@@ -75,6 +75,7 @@ class JsonValidator:
 
             old_column_names.add(_name)
 
+    @staticmethod
     def validate_file_modification(old_content: Dict[str, Dict[str, Any]], new_content: Dict[str, Dict[str, Any]]):
         _validate_columns(old_content["columns"], new_content["columns"])
 
@@ -110,7 +111,6 @@ class JsonValidator:
                     old_content : Dict[str, Dict[str, Any]] = self.repo.get_contents(file.filename).decoded_content.decode()
 
                     # self._validate_json_data(new_content)
-                    print(old_content, new_content)
                     self.validate_file_modification(old_content, new_content)
 
                     
