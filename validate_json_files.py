@@ -83,6 +83,8 @@ class JsonValidator:
             assert new_columns[i]["name"] not in old_column_names, \
                 f"Duplicate column name found for column {new_columns[i]["name"]}"
 
+            old_column_names.add(_name)
+
     def validate_file_modification(old_content: Dict[str, Dict[str, Any]], new_content: Dict[str, Dict[str, Any]]):
         _validate_columns(old_content["columns"], new_content["columns"])
 
