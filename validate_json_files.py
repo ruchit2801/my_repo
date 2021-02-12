@@ -38,9 +38,9 @@ class JsonValidator:
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         for column_name, data_type in json_data["columns"].items():
-            assert data_type in HIVE_SUPPORTED_DATA_TYPES, f'Datatype {data_type} is not supported by Hive,  \
-                                                            supported data types are {HIVE_SUPPORTED_DATA_TYPES}.  \
-                                                            Please provide valid datatype for column {column_name}\
+            assert data_type in HIVE_SUPPORTED_DATA_TYPES, f'Datatype {data_type} is not supported by Hive,
+                                                            supported data types are {HIVE_SUPPORTED_DATA_TYPES}.
+                                                            Please provide valid datatype for column {column_name}
                                                             in file {filename}'
 
 
@@ -60,12 +60,12 @@ class JsonValidator:
         old_column_names = {}
         for i, column in enumerate(old_columns):
             assert column["name"] == new_columns[i]["name"], \
-                f"Operation Not Supported : Either column name or order of columns has been modified \
+                f"Operation Not Supported : Either column name or order of columns has been modified
                     Inequality found at {column["name"]} != {new_columns[i]["name"]}"
             
             if(column["type"] != new_columns[i]["type"]):
                 assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]], \
-                    f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column. \
+                    f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column.
                         Incompatible types found on column {column["name"]}"
 
             old_column_names.add(column["name"])
