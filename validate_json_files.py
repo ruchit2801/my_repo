@@ -38,10 +38,7 @@ class JsonValidator:
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         for column_name, data_type in json_data["columns"].items():
-            assert data_type in HIVE_SUPPORTED_DATA_TYPES, f'Datatype {data_type} is not supported by Hive,
-                                                            supported data types are {HIVE_SUPPORTED_DATA_TYPES}.
-                                                            Please provide valid datatype for column {column_name}
-                                                            in file {filename}'
+            assert data_type in HIVE_SUPPORTED_DATA_TYPES, f'Datatype {data_type} is not supported by Hive, supported data types are {HIVE_SUPPORTED_DATA_TYPES}. Please provide valid datatype for column {column_name} in file {filename}'
 
 
     @staticmethod
