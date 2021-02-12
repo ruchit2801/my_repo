@@ -46,7 +46,7 @@ class JsonValidator:
         self._check_if_required_keys_present(json_data, filename)
         self._check_if_only_hive_supported_data_types_present(json_data, filename)
 
-
+    @staticmethod
     def _validate_columns(old_columns, new_columns):
         len_old = len(old_columns)
         len_new = len(new_columns)
