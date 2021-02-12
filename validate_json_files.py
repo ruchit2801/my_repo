@@ -51,34 +51,27 @@ class JsonValidator:
         len_old = len(old_columns)
         len_new = len(new_columns)
 
-        assert len_old <= len_new, \
-            "Column deletion not supported for now"
+        assert len_old <= len_new, "Column deletion not supported for now"
 
         old_column_names = {}
         for i, column in enumerate(old_columns):
-            assert column["name"] == new_columns[i]["name"], \
-                f"Operation Not Supported : Either column name or order of columns has been modified Inequality found at {column["name"]} != {new_columns[i]["name"]}"
+            assert column["name"] == new_columns[i]["name"], f"Operation Not Supported : Either column name or order of columns has been modified Inequality found at {column["name"]} != {new_columns[i]["name"]}"
             
             if(column["type"] != new_columns[i]["type"]):
-                assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]], \
-                    f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column. Incompatible types found on column {column["name"]}"
+                assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]], f"Can not change {column["type"]} type column to {new_columns[i]["type"]} type column. Incompatible types found on column {column["name"]}"
 
             old_column_names.add(column["name"])
             
         
         for i in range(len_old, len_new):
-            assert "name" in new_columns[i], \
-                f"Required key name not found in newly added column {new_columns[i]}"
-            assert "type" in new_columns[i], \
-                f"Required key type not found in newly added column {new_columns[i]}"
+            assert "name" in new_columns[i], f"Required key name not found in newly added column {new_columns[i]}"
+            assert "type" in new_columns[i], f"Required key type not found in newly added column {new_columns[i]}"
 
             _name, _type = new_columns[i]["name"], new_columns[i]["type"]
 
-            assert _type in HIVE_SUPPORTED_DATA_TYPES, \
-                f"Datatype {_type} not supported by Hive for column {_name}, supported datatypes are {HIVE_SUPPORTED_DATA_TYPES}."
+            assert _type in HIVE_SUPPORTED_DATA_TYPES, f"Datatype {_type} not supported by Hive for column {_name}, supported datatypes are {HIVE_SUPPORTED_DATA_TYPES}."
 
-            assert new_columns[i]["name"] not in old_column_names, \
-                f"Duplicate column name found for column {new_columns[i]["name"]}"
+            assert new_columns[i]["name"] not in old_column_names, f"Duplicate column name found for column {new_columns[i]["name"]}"
 
             old_column_names.add(_name)
 
@@ -86,8 +79,7 @@ class JsonValidator:
         _validate_columns(old_content["columns"], new_content["columns"])
 
         if "partitioned" in old_content:
-            assert "partitioned" in new_content, \
-                "Can not drop partitioning columns"
+            assert "partitioned" in new_content, "Can not drop partitioning columns"
 
             _validate_columns(old_content["partitioned"], new_content["partitioned"])
 
