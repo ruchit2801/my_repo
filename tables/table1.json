@@ -1,0 +1,29 @@
+{
+    "schema_name": "jumbo_test",
+    "table_name": "testing_table",
+    "description": "this is a sample description",
+    "columns": [
+      {
+        "name" : "column1", 
+        "type" : "string"
+      },
+      {
+        "name" : "column2",
+        "type" : "bigint"
+      },
+      {
+        "name" : "column4",
+        "type" : "bigint"
+      }
+    ],
+  
+    "partitioned" : [ 
+      {
+        "name" : "column3",
+        "type" : "string"
+      }
+    ],
+    
+    "input_format" : "TextInputFormat"
+  
+  }
