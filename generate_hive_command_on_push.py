@@ -52,3 +52,6 @@ class CommandGenerator:
                         json_schema : Dict[str, Dict[str, Any]] = self._get_json_from_file_path(file.filename)
 
                         print(json_schema)
+
+generator = CommandGenerator()
+generator.setup_command_generation()
