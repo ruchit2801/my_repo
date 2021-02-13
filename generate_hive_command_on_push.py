@@ -36,7 +36,7 @@ class CommandGenerator:
                 file_status: str = file.status
                 print(f"Checking for {file.filename} with status: {file_status}")
                 _, file_extension = os.path.splitext(file.filename)
-                if file.file_extension == "json":
+                if file.file_extension == ".json":
                     if file_status == "removed":
                         json_data = self._get_json_from_file_path(file.filename)
                         # hive_command = generate_hive_command_from_json("removed", json_data)
