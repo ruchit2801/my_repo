@@ -18,7 +18,12 @@
       {
         "name" : "column5",
         "type" : "bigint"
+      },
+      {
+        "name" : "c6",
+        "type" : "tinyint"
       }
+        
     ],
   
     "partitioned" : [ 
