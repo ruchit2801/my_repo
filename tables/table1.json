@@ -9,7 +9,7 @@
       },
       {
         "name" : "column2",
-        "type" : "bigint"
+        "type" : "int"
       },
       {
         "name" : "column4",
