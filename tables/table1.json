@@ -33,6 +33,6 @@
       }
     ],
     
-    "input_format" : "TextInputFormat"
+    "input_format" : "csv"
   
   }
