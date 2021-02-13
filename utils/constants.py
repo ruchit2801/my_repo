@@ -20,7 +20,7 @@ DATA_TYPE_COMPATIBILITY_MAP = {
     }
 
 SUPPORTED_INPUT_FORMATS = {
-    "csv" : "org.apache.hadoop.mapred.TextInputFormat"
-    "json" : "org.apache.hive.hcatalog.data.JsonSerDe"
+    "csv" : "org.apache.hadoop.mapred.TextInputFormat",
+    "json" : "org.apache.hive.hcatalog.data.JsonSerDe",
     "orc" : "org.apache.hadoop.hive.ql.io.orc.OrcInputFormat"
 }
