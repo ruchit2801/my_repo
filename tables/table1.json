@@ -17,7 +17,7 @@
       },
       {
         "name" : "column5",
-        "type" : "bigint"
+        "type" : "int"
       },
       {
         "name" : "c6",
