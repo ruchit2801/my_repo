@@ -30,7 +30,7 @@ class JsonValidator:
         return self.pull_request_obj.get_files()
 
     @staticmethod
-    def _check_if_required_keys_present(json_data: Dict[str, Dict[str, Any]], filename: str):
+    def _check_if_required_keys_present(json_data: Dict[str, Dict[str, Any]]):
         print("Checking if required keys are present")
         for key in REQUIRED_KEYS:
             assert (key in json_data), f"Required key {key} not found"
@@ -45,7 +45,7 @@ class JsonValidator:
             _check_if_required_keys_present_in_columns("partitioned")
 
     @staticmethod
-    def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
+    def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]]):
         for column_name, data_type in json_data['columns'].items():
             assert (data_type.lower() in HIVE_SUPPORTED_DATA_TYPES), f"Data type {data_type} not supported"
 
@@ -66,9 +66,9 @@ class JsonValidator:
         assert (input_format in SUPPORTED_INPUT_FORMATS) , f"Input format {json_data['input_format']} not supported."
 
     @staticmethod
-    def _validate_json_data(json_data: Dict[str, Dict[str, Any]], filename: str):
-        self._check_if_required_keys_present(json_data, filename)
-        self._check_if_only_hive_supported_data_types_present(json_data, filename)
+    def _validate_json_data(json_data: Dict[str, Dict[str, Any]]):
+        self._check_if_required_keys_present(json_data)
+        self._check_if_only_hive_supported_data_types_present(json_data)
         self._verify_column_name_uniquness(json_data)
         self._validate_input_format(json_data['input_format'])
 
