@@ -25,7 +25,7 @@
       },
       {
         "name" : "c7",
-        "type" : "bigint"
+        "type" : "int"
       }
         
     ],
