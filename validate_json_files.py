@@ -7,13 +7,13 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from github import Github, Repository, PullRequest
 from github.File import File
 from github.PaginatedList import PaginatedList
-from utils.constants import HIVE_SUPPORTED_DATA_TYPES, REQUIRED_KEYS, DATA_TYPE_COMPATIBILITY_MAP
+from utils.constants import HIVE_SUPPORTED_DATA_TYPES, REQUIRED_KEYS, DATA_TYPE_COMPATIBILITY_MAP, SUPPORTED_INPUT_FORMATS
 
 class JsonValidator:
     def __init__(self):
-        self.repo_name: str = str(os.environ["REPO_NAME"])
-        self.pr_num: int = int(os.environ["PULL_NUMBER"])
-        self.github_token: str = str(os.environ["GITHUB_TOKEN"])
+        self.repo_name: str = str(os.environ['REPO_NAME'])
+        self.pr_num: int = int(os.environ['PULL_NUMBER'])
+        self.github_token: str = str(os.environ['GITHUB_TOKEN'])
         self.github = Github(login_or_token=self.github_token)
         self.repo: Repository = self.github.get_repo(full_name_or_id=self.repo_name)
         self.pull_request_obj: PullRequest = self._get_pull_request_obj()
@@ -33,55 +33,68 @@ class JsonValidator:
     def _check_if_required_keys_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         print("Checking if required keys are present")
         for key in REQUIRED_KEYS:
-            assert key in json_data
+            assert (key in json_data), f"Required key {key} not found".
+
+        def _check_if_required_keys_present_in_columns(key: str):
+            for column in json_data[key]:
+                assert ("name" in new_columns[i]), f"Required key 'name' not found in {new_columns[i]}"
+                assert ("type" in new_columns[i]), f"Required key 'type' not found in {new_columns[i]}"
+
+        _check_if_required_keys_present_in_columns("columns")
+        if "partitioned" in json_data:
+            _check_if_required_keys_present_in_columns("partitioned")
 
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]], filename: str):
-        for column_name, data_type in json_data["columns"].items():
-            assert data_type.lower() in HIVE_SUPPORTED_DATA_TYPES
+        for column_name, data_type in json_data['columns'].items():
+            assert (data_type.lower() in HIVE_SUPPORTED_DATA_TYPES), f"Data type {data_type} not supported"
 
+    @staticmethod
+    def _verify_column_name_uniquness(json_data: Dict[str, Dict[str, Any]]):
+        column_names = set()
+        for column in json_data['columns']:
+            assert (column['name'] not in column_names), f"Duplicate column name {column['name']}"
+            column_names.add(column['name'])
+        
+        if "partitioned" in json_data:
+            for column in json_data['partitioned']:
+                assert (column['name'] not in column_names), f"Duplicate column name {column['name']} in partitioned"
+                column_names.add(column['name'])
+
+    @staticmethod
+    def _validate_input_format(input_format: str):
+        assert (input_format in SUPPORTED_INPUT_FORMATS) , f"Input format {json_data['input_format']} not supported."
 
     @staticmethod
     def _validate_json_data(json_data: Dict[str, Dict[str, Any]], filename: str):
         self._check_if_required_keys_present(json_data, filename)
         self._check_if_only_hive_supported_data_types_present(json_data, filename)
+        self._verify_column_name_uniquness(json_data)
+        self._validate_input_format(json_data['input_format'])
 
     @staticmethod
     def _validate_columns(old_columns, new_columns):
         len_old = len(old_columns)
         len_new = len(new_columns)
 
-        assert len_old <= len_new
+        assert (len_old <= len_new), f"Operation not allowed : One or more columns have been deleted"
 
         old_column_names = set()
         for i, column in enumerate(old_columns):
-            assert column["name"] == new_columns[i]["name"]
-            
-            if(column["type"] != new_columns[i]["type"]):
-                assert new_columns[i]["type"] in DATA_TYPE_COMPATIBILITY_MAP[column["type"]]
+            assert (column['name'] == new_columns[i]['name']), "Columns order have been modified, or some columns have been deleted and others added."
 
-            old_column_names.add(column["name"])
-            
+            if(column['type'] != new_columns[i]['type']):
+                assert (new_columns[i]['type'] in DATA_TYPE_COMPATIBILITY_MAP[column['type']]), f"Can not cast {column['type']} to {new_columns[i]['type']}"
+            old_column_names.add(column['name'])
         
-        for i in range(len_old, len_new):
-            assert "name" in new_columns[i]
-            assert "type" in new_columns[i]
+        
 
-            _name, _type = new_columns[i]["name"], new_columns[i]["type"]
+    def _validate_file_modification(self, old_content: Dict[str, Dict[str, Any]], new_content: Dict[str, Dict[str, Any]]):
+        changes_columns = self._validate_columns(old_content['columns'], new_content['columns'])
 
-            assert _type.lower() in HIVE_SUPPORTED_DATA_TYPES
-
-            assert new_columns[i]["name"] not in old_column_names
-
-            old_column_names.add(_name)
-
-    def validate_file_modification(self, old_content: Dict[str, Dict[str, Any]], new_content: Dict[str, Dict[str, Any]]):
-        self._validate_columns(old_content["columns"], new_content["columns"])
-
+        changes_partitioned = None
         if "partitioned" in old_content:
-            assert "partitioned" in new_content
-
-            self._validate_columns(old_content["partitioned"], new_content["partitioned"])
+            assert ("partitioned" in new_content), "Can not remove partition columns"
 
     @staticmethod
     def _get_json_from_file_path(file_path: str) -> Optional[Dict[str, Dict[str, Any]]]:
@@ -101,18 +114,16 @@ class JsonValidator:
                 print(f"Checking for {file.filename} with status: {file_status}")
                 _, file_extension = os.path.splitext(file.filename)
                 if file_status == "removed":
-                    # TODO : Implement dropping tables flow
                     pass
-                
-                if file_status == "modified":
-
+                elif file_status == "modified":
                     new_content : Dict[str, Dict[str, Any]] = self._get_json_from_file_path(file.filename)
                     old_content : Dict[str, Dict[str, Any]] = json.loads(self.repo.get_contents(file.filename).decoded_content.decode())
 
-                    # self._validate_json_data(new_content)
-                    self.validate_file_modification(old_content, new_content)
+                    self._validate_json_data(new_content)
+                    modifications = self._validate_file_modification(old_content, new_content)
 
-                    
-
+                elif file_status == "created":
+                    json_schema : Dict[str, Dict[str, Any]] = self._get_json_from_file_path(file.filename)
+                    self._validate_json_data(json_schema)
 validator = JsonValidator()
 validator.parse_changed_files_for_validation()
