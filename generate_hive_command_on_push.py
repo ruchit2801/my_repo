@@ -29,6 +29,16 @@ class CommandGenerator:
     def _get_changed_files(self):
         return self.pull_request_obj.get_files()
 
+    @staticmethod
+    def _get_json_from_file_path(file_path: str) -> Optional[Dict[str, Dict[str, Any]]]:
+        res_data: Optional[Dict[str, Dict[str, Any]]] = None
+        try:
+            with open(file_path) as json_file:
+                res_data: Dict[str, Dict[str, Any]] = json.load(json_file)
+        except Exception as e:
+            print(e)
+        return res_data
+
     def setup_command_generation(self):
         for page in range(self.changed_files.totalCount):
             files: List[File] = self.changed_files.get_page(page=page)
