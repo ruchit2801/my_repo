@@ -65,8 +65,7 @@ class JsonValidator:
     def _validate_input_format(input_format: str):
         assert (input_format in SUPPORTED_INPUT_FORMATS) , f"Input format {json_data['input_format']} not supported."
 
-    @staticmethod
-    def _validate_json_data(json_data: Dict[str, Dict[str, Any]]):
+    def _validate_json_data(self, json_data: Dict[str, Dict[str, Any]]):
         self._check_if_required_keys_present(json_data)
         self._check_if_only_hive_supported_data_types_present(json_data)
         self._verify_column_name_uniquness(json_data)
