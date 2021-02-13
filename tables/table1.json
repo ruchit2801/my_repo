@@ -18,7 +18,12 @@
       {
         "name" : "column5",
         "type" : "bigint"
+      },
+      {
+        "name" : "c6",
+        "type" : "tinyint"
       }
+        
     ],
   
     "partitioned" : [ 
@@ -28,6 +33,6 @@
       }
     ],
     
-    "input_format" : "TextInputFormat"
+    "input_format" : "csv"
   
   }
