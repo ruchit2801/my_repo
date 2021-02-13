@@ -68,7 +68,7 @@ class JsonValidator:
 
     @staticmethod
     def _validate_input_format(input_format: str):
-        assert (input_format in SUPPORTED_INPUT_FORMATS) , f"Input format {json_data['input_format']} not supported."
+        assert (input_format in SUPPORTED_INPUT_FORMATS) , f"Input format {input_format} not supported."
 
     def _validate_json_data(self, json_data: Dict[str, Dict[str, Any]]):
         self._check_if_required_keys_present(json_data)
