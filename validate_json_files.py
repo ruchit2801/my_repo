@@ -33,7 +33,7 @@ class JsonValidator:
     def _check_if_required_keys_present(json_data: Dict[str, Dict[str, Any]], filename: str):
         print("Checking if required keys are present")
         for key in REQUIRED_KEYS:
-            assert (key in json_data), f"Required key {key} not found".
+            assert (key in json_data), f"Required key {key} not found"
 
         def _check_if_required_keys_present_in_columns(key: str):
             for column in json_data[key]:
