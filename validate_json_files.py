@@ -35,19 +35,24 @@ class JsonValidator:
         for key in REQUIRED_KEYS:
             assert (key in json_data), f"Required key {key} not found"
 
-        def _check_if_required_keys_present_in_columns(key: str):
+        def _check_columns(key: str):
             for column in json_data[key]:
                 assert ("name" in column), f"Required key 'name' not found in {column}"
                 assert ("type" in column), f"Required key 'type' not found in {column}"
 
-        _check_if_required_keys_present_in_columns("columns")
+        _check_columns("columns")
         if "partitioned" in json_data:
-            _check_if_required_keys_present_in_columns("partitioned")
+            _check_columns("partitioned")
 
     @staticmethod
     def _check_if_only_hive_supported_data_types_present(json_data: Dict[str, Dict[str, Any]]):
-        for column_name, data_type in json_data['columns'].items():
-            assert (data_type.lower() in HIVE_SUPPORTED_DATA_TYPES), f"Data type {data_type} not supported"
+        def _check_columns(key: str):
+            for column in json_data[key]:
+                assert(column['type'].lower() in HIVE_SUPPORTED_DATA_TYPES), f"Data type {column['type']} not supported."
+
+        _check_columns("columns")
+        if "partitioned" in json_data:
+            _check_columns("partitioned")
 
     @staticmethod
     def _verify_column_name_uniquness(json_data: Dict[str, Dict[str, Any]]):
