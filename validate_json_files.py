@@ -37,8 +37,8 @@ class JsonValidator:
 
         def _check_if_required_keys_present_in_columns(key: str):
             for column in json_data[key]:
-                assert ("name" in new_columns[i]), f"Required key 'name' not found in {new_columns[i]}"
-                assert ("type" in new_columns[i]), f"Required key 'type' not found in {new_columns[i]}"
+                assert ("name" in column), f"Required key 'name' not found in {column}"
+                assert ("type" in column), f"Required key 'type' not found in {column}"
 
         _check_if_required_keys_present_in_columns("columns")
         if "partitioned" in json_data:
